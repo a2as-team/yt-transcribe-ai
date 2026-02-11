@@ -1,0 +1,165 @@
+manifest:
+  version: "0.1.3"
+  schema: https://a2as.org/cert/schema
+  subject:
+    name: fabiuniz/yt-transcribe-ai
+    source: https://github.com/fabiuniz/yt-transcribe-ai
+    branch: main
+    commit: "4680071f"
+    scope: [video_transcription_dash_ai.py]
+  issued:
+    by: A2AS.org
+    at: '2026-02-11T16:55:33Z'
+    url: https://a2as.org/certified/agents/fabiuniz/yt-transcribe-ai
+  signatures:
+    digest: sha256:UhmvyvRJDDqHVDidaHfdRqZap-TpiGK4tQzd83TsMqg
+    key: ed25519:Jm7MV9HvZtPZVjIVNmv2uvZfzjzh1Zeh7Y1g2GtfD-c
+    sig: ed25519:3QyMaHxyOQLgKVtOqbifCY3OX6fjn9NJ39wZN8sdEF9QnIo-ZAAt-ULX-WiDJxR36PLETc-EZbU9iUUbZ3Y7DQ
+
+agents:
+  agent:
+    type: instance
+    models: [model_id]
+    params:
+      name: agente_revisor
+      description: Agente revisor de post para redes sociais.
+      instruction: instrucao
+      function: call_agent
+
+models:
+  model_id:
+    type: literal
+    agents: [agent]
+
+imports:
+  Agent: google.adk.agents.Agent
+  Counter: collections.Counter
+  dash: dash
+  date: datetime.date
+  dbc: dash_bootstrap_components
+  dcc: dash.dcc
+  display: IPython.display.display
+  genai: google.genai
+  google_search: google.adk.tools.google_search
+  html: dash.html
+  HTML: IPython.display.HTML
+  InMemorySessionService: google.adk.sessions.InMemorySessionService
+  Input: dash.dependencies.Input
+  Markdown: IPython.display.Markdown
+  ngrams: nltk.util.ngrams
+  nltk: nltk
+  os: os
+  Output: dash.dependencies.Output
+  re: re
+  requests: requests
+  Runner: google.adk.runners.Runner
+  State: dash.dependencies.State
+  textwrap: textwrap
+  time: time
+  torch: torch
+  types: google.genai.types
+  userdata: google.colab.userdata
+  warnings: warnings
+  whisper: whisper
+  yt_dlp: yt_dlp
+
+functions:
+  agente_analisador_sentimentos:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [texto, model_id, client]
+  agente_buscador:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [topico, data_de_hoje, model_id, client]
+  agente_planejador:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [topico, lancamentos_buscados, model_id, client]
+  agente_redator:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [topico, plano_de_post, model_id, client]
+  agente_resumidor:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [texto, model_id, client]
+  agente_revisor:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [topico, rascunho_gerado, model_id, client]
+  analisar_sentimentos:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [transcricao_data]
+  atualizar_topico:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [palavra_chave]
+  atualizar_transcricao:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [n_clicks, url_video, idioma]
+  baixar_audio:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [url, update_callback]
+  call_agent:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [name, description, topico, subject, instrucao, model_id, client, tools]
+  config_ai:
+    type: sync
+    module: video_transcription_dash_ai
+  exportar_srt:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [transcricao, nome_arquivo]
+  extrair_termo_principal:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [texto, idioma, n_gram]
+  extrair_video_id:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [url]
+  gerar_post:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [n_clicks, topico]
+  gerar_resumo:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [transcricao_data, idioma]
+  progress_hook:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [d]
+  run_agentes:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [topico, model_id, client]
+  transcrever_audio:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [nome_arquivo, idioma, update_callback]
+  update_progress:
+    type: sync
+    module: video_transcription_dash_ai
+    args: [value]
+
+variables:
+  GOOGLE_API_KEY:
+    type: env
+    params:
+      caller: [os.environ]
+
+networks:
+  www.youtube.com:
+    type: api
+    actions: [GET]
+    urls: ['/watch?v=cgy9diQA6DM']
+    protocols: [https]
+    ports: ["443"]
+    params:
+      links: [value]
